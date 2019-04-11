@@ -1,25 +1,17 @@
 pragma solidity <=0.5.10;
 
 contract Oracle {
-    
-  uint256[6] winning_number;
+    uint constant draw_count = 6;
 
-  function setNum(uint256[6] memory num) private {
-      winning_number = num;
-  }
-
-  function getNum() public view returns (uint256[6] memory) {
-      return winning_number;
-  }
-
-  function random() public {
-      uint256 num = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty)))%(10**12);
-      uint256[6] memory arr;
-      for(uint256 i=0; i < 6; i++){
-          arr[i] = num%100;
-          num /= 100;
-      }
-      setNum(arr);
-  }
+    function generate_number() view public returns (uint[draw_count] memory) {
+        uint num = uint(keccak256(abi.encodePacked(block.timestamp, block.difficulty)))%(10**12);
+        uint[draw_count] memory result;
+        for(uint i=0; i < draw_count; i++){
+            result[i] = num%100;
+            num /= 100;
+        }
+        
+        return result;
+    }
 
 }
