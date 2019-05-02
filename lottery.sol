@@ -6,6 +6,7 @@ contract Lottery {
     mapping (uint => address payable[]) tickets;
     uint prize_pot;
     bool active;
+    bool tickets_closed;
     uint draw_time;
     uint blockNr;
     uint constant draw_count = 6;
@@ -15,11 +16,6 @@ contract Lottery {
         owner = msg.sender;
         active = false;
     }
-    
-    // function get_prize_pot() view public returns(uint){
-    //     return prize_pot;
-    // }
-    
     
     function split(uint256 num) pure public returns(uint[draw_count] memory){
         uint[draw_count] memory result;
@@ -49,12 +45,6 @@ contract Lottery {
     }
     
     function generate_number() view public returns (uint) {
-        // if(blockNr > 0 && blockNr <= 256) { 
-        //     if(block.number - blockNr > 0) { 
-        //         blockNr = 0;
-        //         return uint256(keccak256(block.blockhash(blockNr)));
-        //     }
-        // }
         uint num = uint(keccak256(abi.encodePacked(block.number, block.difficulty)))%(10**12);
         uint[draw_count] memory result_splitted = split(num);
         uint result = sort_and_merge(result_splitted);
@@ -63,17 +53,19 @@ contract Lottery {
 
     
     function start_lottery(uint time) public {
-        require(msg.sender == owner);
-        require(!active);
+        require(msg.sender == owner, "Not the owner");
+        require(!active, "A lottery is already active");
         
         draw_time = now + time;
-        // tickets = empty??
+        // TODO: Empty tickets
         active = true;
+        tickets_closed = false;
     }
 
     function buy_ticket(uint[draw_count] memory ticket_numbers) public payable {
-        require(active);
-        require(msg.value > 1);
+        require(active, "No lottery is active at the moment");
+        require(!tickets_closed, "Tickets are not sold anymore");
+        require(msg.value > 1, "No money is sent");
 
         prize_pot += msg.value;
         uint ticket_number_sorted = sort_and_merge(ticket_numbers); 
@@ -84,29 +76,37 @@ contract Lottery {
 
 
     function end_lottery() public {
-        require(active);
-        require(now > draw_time);
-        active = false;
+        require(now > draw_time, "Too early to end the lottery");
+        require(active, "No lottery is active at the moment");
         
-        blockNr = block.number;
-        winning_number_sorted = generate_number();
-        
-        address payable[] memory winners = tickets[winning_number_sorted];
-        uint num_winners = winners.length;
-
-        if (num_winners == 0) {
-            return;
-        } else {
-            // Split the pot as fair as possible
-            // Keep the remainder of the division in the pot
-            uint prize = prize_pot / num_winners;
-            prize_pot = prize_pot % num_winners;
-
-            for (uint i = 0; i<num_winners; i++) {
-                winners[i].transfer(prize);
+        if (!tickets_closed) {
+            // Stop ticket selling and save current block number
+            
+            tickets_closed = true;
+            blockNr = block.number;
+        } else if (blockNr != block.number) {
+            active = false;
+            // Executed when the transaction is on a new block
+            
+            // Generate winning numbers based on new block number
+            winning_number_sorted = generate_number();
+            
+            address payable[] memory winners = tickets[winning_number_sorted];
+            uint num_winners = winners.length;
+    
+            if (num_winners == 0) {
+                return;
+            } else {
+                // Split the pot as fair as possible
+                // Keep the remainder of the division in the pot
+                uint prize = prize_pot / num_winners;
+                prize_pot = prize_pot % num_winners;
+    
+                for (uint i = 0; i<num_winners; i++) {
+                    winners[i].transfer(prize);
+                }
             }
         }
+        
     }
-    
-
 }
