@@ -15,12 +15,22 @@ var lottery_abi =
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [],
-		"name": "end_lottery",
-		"outputs": [],
+		"constant": true,
+		"inputs": [
+			{
+				"name": "ticket_numbers",
+				"type": "uint256[6]"
+			}
+		],
+		"name": "sort_and_merge",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -38,12 +48,6 @@ var lottery_abi =
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"constant": true,
 		"inputs": [],
 		"name": "generate_number",
@@ -59,13 +63,8 @@ var lottery_abi =
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "ticket_numbers",
-				"type": "uint256[6]"
-			}
-		],
-		"name": "sort_and_merge",
+		"inputs": [],
+		"name": "get_round",
 		"outputs": [
 			{
 				"name": "",
@@ -73,7 +72,16 @@ var lottery_abi =
 			}
 		],
 		"payable": false,
-		"stateMutability": "pure",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "end_lottery",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -94,5 +102,11 @@ var lottery_abi =
 		"payable": false,
 		"stateMutability": "pure",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	}
 ]
