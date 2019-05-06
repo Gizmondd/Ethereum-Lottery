@@ -2,8 +2,9 @@ pragma solidity <=0.5.10;
 
 
 contract Lottery {
-    address owner;
-    mapping (uint => address payable[]) tickets;
+    address payable owner;
+    mapping (uint => mapping (uint => address payable[])) tickets;
+    uint round_number;
     uint prize_pot;
     bool active;
     bool tickets_closed;
@@ -15,6 +16,7 @@ contract Lottery {
     constructor() public {
         owner = msg.sender;
         active = false;
+        round_number = 0;
     }
     
     function split(uint256 num) pure public returns(uint[draw_count] memory){
@@ -25,6 +27,11 @@ contract Lottery {
         }
         return result;
     }
+    
+    function get_round() view public returns (uint){
+        return round_number;
+    }
+    
     
     function sort_and_merge(uint[draw_count] memory ticket_numbers) pure public returns (uint) {
         uint result = 0;
@@ -54,7 +61,7 @@ contract Lottery {
     
     function start_lottery(uint time) public {
         require(msg.sender == owner, "Not the owner");
-        require(!active, "A lottery is already active");
+        require(!active, "A lottery is still active");
         
         draw_time = now + time;
         // TODO: Empty tickets
@@ -70,7 +77,7 @@ contract Lottery {
         prize_pot += msg.value;
         uint ticket_number_sorted = sort_and_merge(ticket_numbers); 
         
-        tickets[ticket_number_sorted].push(msg.sender);
+        tickets[round_number][ticket_number_sorted].push(msg.sender);
     }
     
 
@@ -84,19 +91,23 @@ contract Lottery {
             
             tickets_closed = true;
             blockNr = block.number;
-        } else if (blockNr != block.number) {
+        } else {
+            require(blockNr != block.number, "Still on the same block");
+            round_number += 1;
             active = false;
             // Executed when the transaction is on a new block
             
             // Generate winning numbers based on new block number
             winning_number_sorted = generate_number();
             
-            address payable[] memory winners = tickets[winning_number_sorted];
+            address payable[] memory winners = tickets[round_number][winning_number_sorted];
             uint num_winners = winners.length;
-    
-            if (num_winners == 0) {
-                return;
-            } else {
+            
+            uint owner_share = prize_pot / 100;
+            prize_pot -= owner_share;
+            owner.transfer(owner_share);
+            
+            if (num_winners != 0) {
                 // Split the pot as fair as possible
                 // Keep the remainder of the division in the pot
                 uint prize = prize_pot / num_winners;
@@ -106,6 +117,7 @@ contract Lottery {
                     winners[i].transfer(prize);
                 }
             }
+            
         }
         
     }
