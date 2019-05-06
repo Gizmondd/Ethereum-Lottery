@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <title>ETH Lottery</title>
+</head>
+<body>
+  <header>
+    <span class="header_line">
+        <label for="inp_user_address" class="header_label">User address</label>
+        <input disabled id="inp_user_address" class="inp_address"></input>
+    </span>
+    <span class="header_line">
+        <label for="inp_contract_address" class="header_label">Contract address</label>
+        <input id="inp_contract_address" class="inp_address" ></input>
+    </span>
+  </header>
+
+<div id="input_container">
+  <input class="inp_number" maxlength="2" ></input>
+  <input class="inp_number" maxlength="2" ></input>
+  <input class="inp_number" maxlength="2" ></input>
+  <input class="inp_number" maxlength="2" ></input>
+  <input class="inp_number" maxlength="2" ></input>
+  <input class="inp_number" maxlength="2" ></input>
+</div>
+
+  <button id="btn_buy_ticket">Buy</button>
+  <span id="span_error_message"></span>
+</body>
+<script src="./check_metamask.js"></script>
+<script src="./lottery_abi.js"></script>
+<script src="./index.js"></script>
+</html>
