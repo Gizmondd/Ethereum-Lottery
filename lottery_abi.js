@@ -1,4 +1,4 @@
-var lottery_abi = 
+var lottery_abi =
 [
 	{
 		"constant": false,
@@ -15,22 +15,21 @@ var lottery_abi =
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "ticket_numbers",
-				"type": "uint256[6]"
-			}
-		],
-		"name": "sort_and_merge",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"constant": false,
+		"inputs": [],
+		"name": "determine_winner",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "pure",
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "end_lottery",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -48,9 +47,29 @@ var lottery_abi =
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"constant": true,
 		"inputs": [],
 		"name": "generate_number",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "get_Pot",
 		"outputs": [
 			{
 				"name": "",
@@ -76,12 +95,36 @@ var lottery_abi =
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [],
-		"name": "end_lottery",
-		"outputs": [],
+		"name": "get_winningNumbers",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "ticket_numbers",
+				"type": "uint256[6]"
+			}
+		],
+		"name": "sort_and_merge",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -102,11 +145,5 @@ var lottery_abi =
 		"payable": false,
 		"stateMutability": "pure",
 		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	}
 ]
