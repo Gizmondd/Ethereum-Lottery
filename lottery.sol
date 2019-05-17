@@ -1,9 +1,7 @@
 pragma solidity <=0.5.10;
 
 // Interface to Oracle SC
-contract Oracle {
-    function generate_number(uint blocknumber) public returns (uint);
-}
+import "./oracle.sol";
 
 contract Lottery {
     address payable owner;
@@ -25,28 +23,27 @@ contract Lottery {
         oracle = Oracle(_oracle_address);
     }
 
-    function split(uint256 num) pure public returns(uint[draw_count] memory){
+    function split(uint256 num) public pure returns(uint[draw_count] memory){
         uint[draw_count] memory result;
-        for(uint i=0; i < draw_count; i++){
-            result[i] = num%100;
-            num /= 100;
+        for (uint i = 0; i < draw_count; i++){
+            result[i] = (num / 100 ** (draw_count - 1 - i)) % 100;
         }
         return result;
     }
 
-    function get_round() view public returns (uint){
+    function get_round() public view returns (uint){
         return round_number;
     }
 
-    function get_Pot() view public returns (uint){
+    function get_Pot() public view returns (uint){
         return prize_pot;
     }
 
-    function get_winningNumbers() view public returns (uint){
+    function get_winningNumbers() public view returns (uint){
         return winning_number_sorted;
     }
 
-    function sort_and_merge(uint[draw_count] memory ticket_numbers) pure public returns (uint) {
+    function sort_and_merge(uint[draw_count] memory ticket_numbers) public pure returns (uint) {
         uint result = 0;
         for (uint i = 0; i<draw_count; i++){
             for (uint j = i+1; j<draw_count; j++){
@@ -64,8 +61,8 @@ contract Lottery {
         return result;
     }
 
-    function get_oracle_number() internal returns (uint) {
-        uint num = oracle.generate_number(block.number);
+    function get_oracle_number() public view returns (uint) {
+        uint num = oracle.generate_number();
         uint[draw_count] memory result_splitted = split(num);
         uint result = sort_and_merge(result_splitted);
         return result;
@@ -75,7 +72,7 @@ contract Lottery {
         require(msg.sender == owner, "Not the owner");
         require(!active, "A lottery is still active");
 
-        draw_time = now + time;
+        draw_time = block.timestamp + time;
         active = true;
         tickets_closed = false;
     }
@@ -92,7 +89,7 @@ contract Lottery {
     }
 
     function end_lottery() public {
-        require(now > draw_time, "Too early to end the lottery");
+        require(block.timestamp > draw_time, "Too early to end the lottery");
         require(active, "No lottery is active at the moment");
         require(!tickets_closed, "The lottery has already ended");
 
