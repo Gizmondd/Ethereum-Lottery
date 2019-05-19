@@ -7,7 +7,7 @@ body {
   background-attachment: fixed;
 }
 
-header {
+#div_addresses {
   padding: 25px;
 }
 
@@ -58,5 +58,10 @@ header {
 #span_error_message {
   margin: 50px;
   color: red;
+  display: block;
+}
+
+#span_ticket_price {
+  margin: 10px;
   display: block;
 }

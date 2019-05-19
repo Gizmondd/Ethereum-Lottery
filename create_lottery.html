@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <link rel="stylesheet" type="text/css" href="index.css">
+  <link rel="stylesheet" type="text/css" href="create_lottery.css">
   <title>ETH Lottery</title>
 </head>
 <body>
-  <div id="div_addresses">
+  <header>
     <span class="header_line">
         <label for="inp_user_address" class="header_label">User address</label>
         <input disabled id="inp_user_address" class="inp_address"></input>
@@ -15,22 +15,14 @@
         <label for="inp_contract_address" class="header_label">Contract address</label>
         <input id="inp_contract_address" class="inp_address" ></input>
     </span>
-  </div>
+  </header>
 
-<div id="input_container">
-  <input class="inp_number" maxlength="2" ></input>
-  <input class="inp_number" maxlength="2" ></input>
-  <input class="inp_number" maxlength="2" ></input>
-  <input class="inp_number" maxlength="2" ></input>
-  <input class="inp_number" maxlength="2" ></input>
-  <input class="inp_number" maxlength="2" ></input>
-</div>
-
-  <button id="btn_buy_ticket">Buy</button>
-  <span id="span_ticket_price">ticket price: 1 ether</span>
+  <button id="btn_start_lottery">Start Lottery</button>
+  <button id="btn_end_lottery">End Lottery</button>
+  <button id="btn_determine_winner">Distribute prize</button>
   <span id="span_error_message"></span>
 </body>
 <script src="./check_metamask.js"></script>
 <script src="./load_abi.js"></script>
-<script src="./index.js"></script>
+<script src="./create_lottery.js"></script>
 </html>

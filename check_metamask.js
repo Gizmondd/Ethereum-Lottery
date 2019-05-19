@@ -2,17 +2,16 @@
 
 // Check MetaMask
 
-async function check_metamask() {
+async function checkMetamask() {
   // Modern dapp browsers...
   if (window.ethereum) {
     window.web3 = new Web3(ethereum);
     try {
       // Request account access if needed
       await ethereum.enable();
-      set_error_message("")
+      setErrorMessage("")
     } catch (error) {
-      console.log("User denied access")
-      set_error_message("User denied access")
+      setErrorMessage("User denied access")
     }
   }
   // Legacy dapp browsers...
@@ -21,7 +20,6 @@ async function check_metamask() {
   }
   // Non-dapp browsers...
   else {
-    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    set_error_message('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    setErrorMessage('Non-Ethereum browser detected. You should consider trying MetaMask!')
   }
 }

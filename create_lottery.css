@@ -1,0 +1,39 @@
+body {
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: snow;
+  background-image: linear-gradient(to top left, #16222A, #3A6073);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+header {
+  padding: 25px;
+}
+
+button {
+  width: 100px;
+  height: 25px
+}
+
+.header_label {
+  font-size: 12px;
+  display: block;
+}
+
+#input_container {
+  padding: 25px;
+}
+
+.inp_address {
+  width: 400px;
+  height: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#span_error_message {
+  margin: 50px;
+  color: red;
+  display: block;
+}
