@@ -84,7 +84,7 @@ contract Lottery {
     function buyTicket(uint[drawCount] memory ticketNumbers) public payable {
         require(active, "No lottery is active at the moment");
         require(!ticketsClosed, "Tickets are not sold anymore");
-        require(msg.value > 1, "No money is sent");
+        require(msg.value >= 400000000000000, "No money is sent");
 
         prizePot += msg.value;
         uint ticketNumberSorted = merge(sort(ticketNumbers));

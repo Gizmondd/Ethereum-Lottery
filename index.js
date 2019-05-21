@@ -12,7 +12,7 @@ function buyTicket() {
     {
       from: web3.eth.defaultAccount,
       gasPrice: "3000000",
-      value: web3.toWei("1", "ether")
+      value: web3.toWei("0.0004", "ether")
     },
     (error, transactionHash) => {
       if (error) {
@@ -82,8 +82,20 @@ function update() {
     Lottery.isWatching = true;
     attachLotteryEndEvent()
   }
+
+  Lottery.potInterval = setInterval(getPot, 1000);
+
   setErrorMessage("")
   return true
+}
+
+function getPot() {
+  Lottery.contractInstance.getPot.call(function(error, result) {
+    if (result.c !== 0) {
+       result.e = result.e-18
+    }
+    document.getElementById("span_pot").innerHTML = "Current pot: " + result.toString() + " ether"
+  })
 }
 
 function attachLotteryEndEvent() {
@@ -94,6 +106,9 @@ function attachLotteryEndEvent() {
     Lottery.isWatching = false;
     if (!error) {
       console.log(result)
+      if (result.args.prize.c !== 0) {
+        result.args.prize.e = result.args.prize.e - 18
+      }
       onEndLottery(result.args.roundNumber.toString(), result.args.winningNumbers, result.args.winners, result.args.prize.toString(),)
     } else {
       console.log(error)
@@ -102,6 +117,8 @@ function attachLotteryEndEvent() {
 }
 
 function onEndLottery(roundNumber, winningNumbers, winnerList, prize) {
+  clearInterval(Lottery.potInterval)
+
   var winCount = 0
   for (var index in winnerList) {
     if (web3.eth.defaultAccount === winnerList[index]) {
@@ -115,10 +132,8 @@ function onEndLottery(roundNumber, winningNumbers, winnerList, prize) {
     extractedNumbers.push(winningNumbers[index].toString())
   }
 
-  console.log(prize)
-
   var myPrize = prize * winCount
-  alert(`Lottery has ended\nWinning numbers: ${extractedNumbers}\nYou have won ${myPrize} Wei`)
+  alert(`Lottery has ended\nWinning numbers: ${extractedNumbers}\nYou have won ${myPrize} ether`)
 }
 
 window.addEventListener('load', async () => {
